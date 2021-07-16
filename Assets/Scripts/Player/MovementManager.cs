@@ -30,11 +30,14 @@ public class MovementManager : MonoBehaviour
     {
         rb.velocity = new Vector2(vector.x * speed, Mathf.Clamp(rb.velocity.y, minYVelocity, maxYVelocity));
 
-        if (spaceDown && spaceDownCounter > 0)
+        if (spaceDown)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Force);
             spaceDownCounter -= Time.deltaTime;
         }
+
+        if (spaceDownCounter < 0)
+            spaceDown = false;
     }
 
 
@@ -55,7 +58,5 @@ public class MovementManager : MonoBehaviour
 
         if (value == 0)
             spaceDown = false;
-
-        Debug.Log("Jump " + value);
     }
 }
