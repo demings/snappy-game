@@ -4,20 +4,19 @@ using UnityEngine.InputSystem;
 public class MovementManager : MonoBehaviour
 {
     Rigidbody2D rb;
-    Animator animator;
     Vector2 vector;
+    PlayerState playerState;
 
     private const float speed = 5f;
     private const float maxYVelocity = 30;
     private const float minYVelocity = -30;
 
-    public JumpState jumpState = JumpState.Grounded;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+        playerState = GetComponent<PlayerState>();
     }
 
     void FixedUpdate()
@@ -26,12 +25,10 @@ public class MovementManager : MonoBehaviour
         rb.velocity = new Vector2(vector.x * speed, y);
 
         if (y < 0)
-            jumpState = JumpState.Landing;
+            playerState.jumpState = JumpState.Landing;
 
-        if (y == 0 && jumpState == JumpState.Landing)
-            jumpState = JumpState.Grounded;
-
-        animator.SetInteger("JumpState", (int)jumpState);
+        if (y == 0 && playerState.jumpState == JumpState.Landing)
+            playerState.jumpState = JumpState.Grounded;
     }
 
     
@@ -40,17 +37,10 @@ public class MovementManager : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.ReadValue<float>() > 0 && jumpState == JumpState.Grounded)
+        if (context.ReadValue<float>() > 0 && playerState.jumpState == JumpState.Grounded)
         {
             rb.AddForce(Vector2.up * speed, ForceMode2D.Impulse);
-            jumpState = JumpState.Jumping;
+            playerState.jumpState = JumpState.Jumping;
         }
     }
-}
-
-public enum JumpState
-{
-    Grounded,
-    Jumping,
-    Landing
 }
