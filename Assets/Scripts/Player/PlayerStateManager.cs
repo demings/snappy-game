@@ -17,13 +17,13 @@ public class PlayerStateManager : MonoBehaviour
     {
         var y = rb.velocity.y;
 
-        if (y > 0)
+        if (y > 0.1)
             playerState.jumpState = JumpState.Jumping;
 
-        if (y < 0)
+        if (y < -0.1)
             playerState.jumpState = JumpState.Landing;
 
-        if (y == 0 && playerState.jumpState == JumpState.Landing)
+        if (y > -0.1 && y < 0.1)
             playerState.jumpState = JumpState.Grounded;
     }
 }

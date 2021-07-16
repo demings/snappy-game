@@ -33,7 +33,6 @@ public class MovementManager : MonoBehaviour
         if (context.ReadValue<float>() > 0 && playerState.jumpState == JumpState.Grounded)
         {
             rb.AddForce(Vector2.up * speed, ForceMode2D.Impulse);
-            playerState.jumpState = JumpState.Jumping;
         }
     }
 }
