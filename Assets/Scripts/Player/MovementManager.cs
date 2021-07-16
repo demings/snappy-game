@@ -3,30 +3,27 @@ using UnityEngine.InputSystem;
 
 public class MovementManager : MonoBehaviour
 {
+    Rigidbody2D rb;
+    readonly float speed = 5f;
+    Vector2 vector;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        rb.velocity = new Vector2(vector.x * speed, rb.velocity.y);
     }
 
-    public void Move(InputAction.CallbackContext context)
-    {
-        var value = context.ReadValue<Vector2>();
-
-        Debug.Log("Move " + value);
-
-    }
+    public void Move(InputAction.CallbackContext context) =>
+        vector = context.ReadValue<Vector2>();
 
     public void Jump(InputAction.CallbackContext context)
     {
-        var value = context.ReadValue<float>();
-
-        Debug.Log("Jump " + value);
+        if (context.ReadValue<float>() > 0)
+            rb.AddForce(Vector2.up * speed, ForceMode2D.Impulse);
     }
 }
