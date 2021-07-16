@@ -7,7 +7,7 @@ public class MovementManager : MonoBehaviour
     Vector2 vector;
     PlayerState playerState;
 
-    private const float speed = 5f;
+    public float speed = 7.5f;
     private const float maxYVelocity = 30;
     private const float minYVelocity = -30;
 
@@ -21,14 +21,7 @@ public class MovementManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        var y = Mathf.Clamp(rb.velocity.y, minYVelocity, maxYVelocity);
-        rb.velocity = new Vector2(vector.x * speed, y);
-
-        if (y < 0)
-            playerState.jumpState = JumpState.Landing;
-
-        if (y == 0 && playerState.jumpState == JumpState.Landing)
-            playerState.jumpState = JumpState.Grounded;
+        rb.velocity = new Vector2(vector.x * speed, Mathf.Clamp(rb.velocity.y, minYVelocity, maxYVelocity));
     }
 
     
