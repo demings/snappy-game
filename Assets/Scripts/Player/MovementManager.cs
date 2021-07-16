@@ -4,17 +4,20 @@ using UnityEngine.InputSystem;
 public class MovementManager : MonoBehaviour
 {
     Rigidbody2D rb;
-    readonly float speed = 5f;
+    Animator animator;
+    Vector2 vector;
+
+    private const float speed = 5f;
     private const float maxYVelocity = 30;
     private const float minYVelocity = -30;
-    Vector2 vector;
+
     public JumpState jumpState = JumpState.Grounded;
-    public Transform groundCheck;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     void FixedUpdate()
@@ -28,6 +31,7 @@ public class MovementManager : MonoBehaviour
         if (y == 0 && jumpState == JumpState.Landing)
             jumpState = JumpState.Grounded;
 
+        animator.SetInteger("JumpState", (int)jumpState);
     }
 
     
