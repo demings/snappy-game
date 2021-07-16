@@ -8,9 +8,16 @@ public class MovementManager : MonoBehaviour
     PlayerState playerState;
 
     public float speed = 7.5f;
+    public float jumpForce = 20;
+    public float jumpImpulse = 3;
+
     private const float maxYVelocity = 30;
     private const float minYVelocity = -30;
 
+    private bool spaceDown = false;
+    private const float spaceDownCounterMax = 1;
+    private float spaceDownCounter = spaceDownCounterMax;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -22,17 +29,33 @@ public class MovementManager : MonoBehaviour
     void FixedUpdate()
     {
         rb.velocity = new Vector2(vector.x * speed, Mathf.Clamp(rb.velocity.y, minYVelocity, maxYVelocity));
+
+        if (spaceDown && spaceDownCounter > 0)
+        {
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Force);
+            spaceDownCounter -= Time.deltaTime;
+        }
     }
 
-    
+
     public void Move(InputAction.CallbackContext context) =>
         vector = context.ReadValue<Vector2>();
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.ReadValue<float>() > 0 && playerState.jumpState == JumpState.Grounded)
+        var value = context.ReadValue<float>();
+
+        if (value > 0 && playerState.jumpState == JumpState.Grounded)
         {
-            rb.AddForce(Vector2.up * speed, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * jumpImpulse, ForceMode2D.Impulse);
+
+            spaceDown = true;
+            spaceDownCounter = spaceDownCounterMax;
         }
+
+        if (value == 0)
+            spaceDown = false;
+
+        Debug.Log("Jump " + value);
     }
 }
